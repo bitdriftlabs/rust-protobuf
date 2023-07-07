@@ -265,7 +265,13 @@ impl PrintableToJson for Value {
                 }
             }
             Some(value::Kind::BoolValue(b)) => w.print_printable(&b),
-            Some(value::Kind::NumberValue(n)) => w.print_printable(&n),
+            Some(value::Kind::NumberValue(n)) => {
+                if n.round() == n {
+                    w.print_printable(&(n as i32))
+                } else {
+                    w.print_printable(&n)
+                }
+            }
             Some(value::Kind::StringValue(ref s)) => w.print_printable::<String>(&s),
             Some(value::Kind::StructValue(ref s)) => w.print_printable(&s),
             Some(value::Kind::ListValue(ref l)) => w.print_printable(&l),

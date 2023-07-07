@@ -48,7 +48,9 @@ fn test_value() {
     m.mut_value().set_bool_value(true);
     test_json_print_parse_message("{\"value\": true}", &m);
     m.mut_value().set_number_value(12.0);
-    test_json_print_parse_message("{\"value\": 12.0}", &m);
+    test_json_print_parse_message("{\"value\": 12}", &m);
+    m.mut_value().set_number_value(12.1);
+    test_json_print_parse_message("{\"value\": 12.1}", &m);
     m.mut_value().set_string_value("ab".to_owned());
     test_json_print_parse_message("{\"value\": \"ab\"}", &m);
     m.mut_value().set_null_value(NullValue::NULL_VALUE);
@@ -68,7 +70,7 @@ fn test_value() {
         });
         l
     });
-    test_json_print_parse_message("{\"value\": [true, 12.0]}", &m);
+    test_json_print_parse_message("{\"value\": [true, 12]}", &m);
 
     m.mut_value().set_struct_value(Struct::new());
     test_json_print_parse_message("{\"value\": {}}", &m);
@@ -87,7 +89,7 @@ fn test_list_value() {
         v.set_bool_value(false);
         v
     });
-    test_json_print_parse_message("{\"listValue\": [2.0, false]}", &m);
+    test_json_print_parse_message("{\"listValue\": [2, false]}", &m);
 }
 
 #[test]
@@ -98,7 +100,7 @@ fn test_struct() {
         v.set_number_value(3.0);
         v
     });
-    test_json_print_parse_message("{\"structValue\": {\"ab\": 3.0}}", &m);
+    test_json_print_parse_message("{\"structValue\": {\"ab\": 3}}", &m);
 }
 
 #[test]
