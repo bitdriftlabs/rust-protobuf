@@ -265,7 +265,15 @@ impl PrintableToJson for Value {
                 }
             }
             Some(value::Kind::BoolValue(b)) => w.print_printable(&b),
-            Some(value::Kind::NumberValue(n)) => w.print_printable(&n),
+            Some(value::Kind::NumberValue(n)) => {
+                // Print as i32 if the value is an integer type and fits within an i32.
+                // Printing as i64 results in quotes being added which is not what we want.
+                if n.round() == n && (n as i32) as f64 == n {
+                    w.print_printable(&(n as i32))
+                } else {
+                    w.print_printable(&n)
+                }
+            }
             Some(value::Kind::StringValue(ref s)) => w.print_printable::<String>(&s),
             Some(value::Kind::StructValue(ref s)) => w.print_printable(&s),
             Some(value::Kind::ListValue(ref l)) => w.print_printable(&l),
