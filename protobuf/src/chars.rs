@@ -23,16 +23,6 @@ impl Chars {
         self.0.clear();
     }
 
-    /// Create from a static string.
-    pub fn from_static_str(src: &'static str) -> Chars {
-        Chars(Bytes::from_static(src.as_bytes()))
-    }
-
-    /// Create from a string reference.
-    pub fn from_ref_str(src: &str) -> Chars {
-        Chars(Bytes::copy_from_slice(src.as_bytes()))
-    }
-
     /// Try convert from `Bytes`
     pub fn from_bytes(bytes: Bytes) -> Result<Chars, str::Utf8Error> {
         str::from_utf8(&bytes)?;
@@ -53,6 +43,12 @@ impl Chars {
     /// Consume self and return the underlying bytes.
     pub fn into_bytes(self) -> Bytes {
         self.0
+    }
+}
+
+impl From<&'static str> for Chars {
+    fn from(value: &'static str) -> Self {
+        Chars(Bytes::from_static(value.as_bytes()))
     }
 }
 
@@ -113,7 +109,7 @@ mod test {
     fn test_display_and_debug() {
         let s = "test";
         let string: String = s.into();
-        let chars: Chars = Chars::from_static_str(s);
+        let chars: Chars = s.into();
 
         assert_eq!(format!("{}", string), format!("{}", chars));
         assert_eq!(format!("{:?}", string), format!("{:?}", chars));
