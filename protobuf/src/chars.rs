@@ -2,6 +2,7 @@
 
 use std::borrow::Borrow;
 use std::fmt;
+use std::hash::Hash;
 use std::ops::Deref;
 use std::str;
 
@@ -9,7 +10,7 @@ use bytes::Bytes;
 
 /// Thin wrapper around `Bytes` which guarantees that bytes are valid UTF-8 string.
 /// Should be API-compatible to `String`.
-#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Chars(Bytes);
 
 impl Chars {
@@ -43,6 +44,17 @@ impl Chars {
     /// Consume self and return the underlying bytes.
     pub fn into_bytes(self) -> Bytes {
         self.0
+    }
+}
+
+// Chars can be used as the key in a HashMap in a proto map. Because Chars is a wrapper around
+// Bytes, we cannot derive Hash on bytes, because hashing Bytes/u8 is not the same as hashing str.
+// So here we make sure when we hash we are hashing the str otherwise we get very confusing
+// results.
+impl Hash for Chars {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        let str_self: &str = self;
+        str_self.hash(state);
     }
 }
 
@@ -102,7 +114,16 @@ impl fmt::Debug for Chars {
 
 #[cfg(test)]
 mod test {
+    use std::collections::HashMap;
+
     use super::Chars;
+
+    #[test]
+    fn test_chars_hashmap() {
+        let mut table: HashMap<Chars, u64> = HashMap::new();
+        table.insert("foo".into(), 5);
+        assert_eq!(5, *table.get("foo").unwrap());
+    }
 
     #[test]
     #[cfg_attr(miri, ignore)] // bytes violates SB, see https://github.com/tokio-rs/bytes/issues/522
