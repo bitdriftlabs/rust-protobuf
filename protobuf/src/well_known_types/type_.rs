@@ -22,8 +22,8 @@
 //! Generated file from `google/protobuf/type.proto`
 
 ///  A protocol buffer message type.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.Type)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct Type {
     // message fields
     ///  The fully qualified message name.
@@ -244,8 +244,8 @@ impl crate::reflect::ProtobufValue for Type {
 }
 
 ///  A single field of a message type.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.Field)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct Field {
     // message fields
     ///  The field type.
@@ -619,6 +619,31 @@ pub mod field {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<Kind> {
+            match str {
+                "TYPE_UNKNOWN" => ::std::option::Option::Some(Kind::TYPE_UNKNOWN),
+                "TYPE_DOUBLE" => ::std::option::Option::Some(Kind::TYPE_DOUBLE),
+                "TYPE_FLOAT" => ::std::option::Option::Some(Kind::TYPE_FLOAT),
+                "TYPE_INT64" => ::std::option::Option::Some(Kind::TYPE_INT64),
+                "TYPE_UINT64" => ::std::option::Option::Some(Kind::TYPE_UINT64),
+                "TYPE_INT32" => ::std::option::Option::Some(Kind::TYPE_INT32),
+                "TYPE_FIXED64" => ::std::option::Option::Some(Kind::TYPE_FIXED64),
+                "TYPE_FIXED32" => ::std::option::Option::Some(Kind::TYPE_FIXED32),
+                "TYPE_BOOL" => ::std::option::Option::Some(Kind::TYPE_BOOL),
+                "TYPE_STRING" => ::std::option::Option::Some(Kind::TYPE_STRING),
+                "TYPE_GROUP" => ::std::option::Option::Some(Kind::TYPE_GROUP),
+                "TYPE_MESSAGE" => ::std::option::Option::Some(Kind::TYPE_MESSAGE),
+                "TYPE_BYTES" => ::std::option::Option::Some(Kind::TYPE_BYTES),
+                "TYPE_UINT32" => ::std::option::Option::Some(Kind::TYPE_UINT32),
+                "TYPE_ENUM" => ::std::option::Option::Some(Kind::TYPE_ENUM),
+                "TYPE_SFIXED32" => ::std::option::Option::Some(Kind::TYPE_SFIXED32),
+                "TYPE_SFIXED64" => ::std::option::Option::Some(Kind::TYPE_SFIXED64),
+                "TYPE_SINT32" => ::std::option::Option::Some(Kind::TYPE_SINT32),
+                "TYPE_SINT64" => ::std::option::Option::Some(Kind::TYPE_SINT64),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [Kind] = &[
             Kind::TYPE_UNKNOWN,
             Kind::TYPE_DOUBLE,
@@ -697,6 +722,16 @@ pub mod field {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<Cardinality> {
+            match str {
+                "CARDINALITY_UNKNOWN" => ::std::option::Option::Some(Cardinality::CARDINALITY_UNKNOWN),
+                "CARDINALITY_OPTIONAL" => ::std::option::Option::Some(Cardinality::CARDINALITY_OPTIONAL),
+                "CARDINALITY_REQUIRED" => ::std::option::Option::Some(Cardinality::CARDINALITY_REQUIRED),
+                "CARDINALITY_REPEATED" => ::std::option::Option::Some(Cardinality::CARDINALITY_REPEATED),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [Cardinality] = &[
             Cardinality::CARDINALITY_UNKNOWN,
             Cardinality::CARDINALITY_OPTIONAL,
@@ -731,8 +766,8 @@ pub mod field {
 }
 
 ///  Enum type definition.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.Enum)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct Enum {
     // message fields
     ///  Enum type name.
@@ -934,8 +969,8 @@ impl crate::reflect::ProtobufValue for Enum {
 }
 
 ///  Enum value definition.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.EnumValue)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct EnumValue {
     // message fields
     ///  Enum value name.
@@ -1098,8 +1133,8 @@ impl crate::reflect::ProtobufValue for EnumValue {
 
 ///  A protocol buffer option, which can be attached to a message, field,
 ///  enumeration, etc.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.Option)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct Option {
     // message fields
     ///  The option's name. For protobuf built-in options (options defined in
@@ -1268,6 +1303,14 @@ impl crate::Enum for Syntax {
         match value {
             0 => ::std::option::Option::Some(Syntax::SYNTAX_PROTO2),
             1 => ::std::option::Option::Some(Syntax::SYNTAX_PROTO3),
+            _ => ::std::option::Option::None
+        }
+    }
+
+    fn from_str(str: &str) -> ::std::option::Option<Syntax> {
+        match str {
+            "SYNTAX_PROTO2" => ::std::option::Option::Some(Syntax::SYNTAX_PROTO2),
+            "SYNTAX_PROTO3" => ::std::option::Option::Some(Syntax::SYNTAX_PROTO3),
             _ => ::std::option::Option::None
         }
     }

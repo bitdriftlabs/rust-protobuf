@@ -1,6 +1,14 @@
 # Changelog
 
-## [3.2] - Unreleased
+## [3.3] - Unreleased
+
+* [Unnecessary copy in print_to_string_internal](https://github.com/stepancheg/rust-protobuf/pull/684)
+
+## [3.3.0] - 2023-09-30
+
+* [protoc_extra_arg not passed through](https://github.com/stepancheg/rust-protobuf/issues/643)
+* [move custom code before derive block in struct](https://github.com/stepancheg/rust-protobuf/issues/675)
+* [Enum::from_str](https://github.com/stepancheg/rust-protobuf/pull/664)
 
 ## [3.2.0] - 2022-09-26
 

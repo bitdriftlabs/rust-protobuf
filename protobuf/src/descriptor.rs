@@ -23,8 +23,8 @@
 
 ///  The protocol compiler can output a FileDescriptorSet containing the .proto
 ///  files it parses.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.FileDescriptorSet)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct FileDescriptorSet {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.FileDescriptorSet.file)
@@ -152,8 +152,8 @@ impl crate::reflect::ProtobufValue for FileDescriptorSet {
 }
 
 ///  Describes a complete .proto file.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.FileDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct FileDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.FileDescriptorProto.name)
@@ -634,8 +634,8 @@ impl crate::reflect::ProtobufValue for FileDescriptorProto {
 }
 
 ///  Describes a message type.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.DescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct DescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.DescriptorProto.name)
@@ -1006,8 +1006,8 @@ impl crate::reflect::ProtobufValue for DescriptorProto {
 
 /// Nested message and enums of message `DescriptorProto`
 pub mod descriptor_proto {
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.DescriptorProto.ExtensionRange)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct ExtensionRange {
         // message fields
         // @@protoc_insertion_point(field:google.protobuf.DescriptorProto.ExtensionRange.start)
@@ -1211,8 +1211,8 @@ pub mod descriptor_proto {
     ///  Range of reserved tag numbers. Reserved tag numbers may not be used by
     ///  fields or extension ranges in the same message. Reserved ranges may
     ///  not overlap.
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.DescriptorProto.ReservedRange)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct ReservedRange {
         // message fields
         // @@protoc_insertion_point(field:google.protobuf.DescriptorProto.ReservedRange.start)
@@ -1390,8 +1390,8 @@ pub mod descriptor_proto {
     }
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.ExtensionRangeOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct ExtensionRangeOptions {
     // message fields
     ///  The parser stores options it doesn't recognize here. See above.
@@ -1520,8 +1520,8 @@ impl crate::reflect::ProtobufValue for ExtensionRangeOptions {
 }
 
 ///  Describes a field within a message.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.FieldDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct FieldDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.FieldDescriptorProto.name)
@@ -2224,6 +2224,30 @@ pub mod field_descriptor_proto {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<Type> {
+            match str {
+                "TYPE_DOUBLE" => ::std::option::Option::Some(Type::TYPE_DOUBLE),
+                "TYPE_FLOAT" => ::std::option::Option::Some(Type::TYPE_FLOAT),
+                "TYPE_INT64" => ::std::option::Option::Some(Type::TYPE_INT64),
+                "TYPE_UINT64" => ::std::option::Option::Some(Type::TYPE_UINT64),
+                "TYPE_INT32" => ::std::option::Option::Some(Type::TYPE_INT32),
+                "TYPE_FIXED64" => ::std::option::Option::Some(Type::TYPE_FIXED64),
+                "TYPE_FIXED32" => ::std::option::Option::Some(Type::TYPE_FIXED32),
+                "TYPE_BOOL" => ::std::option::Option::Some(Type::TYPE_BOOL),
+                "TYPE_STRING" => ::std::option::Option::Some(Type::TYPE_STRING),
+                "TYPE_GROUP" => ::std::option::Option::Some(Type::TYPE_GROUP),
+                "TYPE_MESSAGE" => ::std::option::Option::Some(Type::TYPE_MESSAGE),
+                "TYPE_BYTES" => ::std::option::Option::Some(Type::TYPE_BYTES),
+                "TYPE_UINT32" => ::std::option::Option::Some(Type::TYPE_UINT32),
+                "TYPE_ENUM" => ::std::option::Option::Some(Type::TYPE_ENUM),
+                "TYPE_SFIXED32" => ::std::option::Option::Some(Type::TYPE_SFIXED32),
+                "TYPE_SFIXED64" => ::std::option::Option::Some(Type::TYPE_SFIXED64),
+                "TYPE_SINT32" => ::std::option::Option::Some(Type::TYPE_SINT32),
+                "TYPE_SINT64" => ::std::option::Option::Some(Type::TYPE_SINT64),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [Type] = &[
             Type::TYPE_DOUBLE,
             Type::TYPE_FLOAT,
@@ -2317,6 +2341,15 @@ pub mod field_descriptor_proto {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<Label> {
+            match str {
+                "LABEL_OPTIONAL" => ::std::option::Option::Some(Label::LABEL_OPTIONAL),
+                "LABEL_REQUIRED" => ::std::option::Option::Some(Label::LABEL_REQUIRED),
+                "LABEL_REPEATED" => ::std::option::Option::Some(Label::LABEL_REPEATED),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [Label] = &[
             Label::LABEL_OPTIONAL,
             Label::LABEL_REQUIRED,
@@ -2355,8 +2388,8 @@ pub mod field_descriptor_proto {
 }
 
 ///  Describes a oneof.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.OneofDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct OneofDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.OneofDescriptorProto.name)
@@ -2538,8 +2571,8 @@ impl crate::reflect::ProtobufValue for OneofDescriptorProto {
 }
 
 ///  Describes an enum type.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.EnumDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct EnumDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.EnumDescriptorProto.name)
@@ -2799,8 +2832,8 @@ pub mod enum_descriptor_proto {
     ///  Note that this is distinct from DescriptorProto.ReservedRange in that it
     ///  is inclusive such that it can appropriately represent the entire int32
     ///  domain.
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.EnumDescriptorProto.EnumReservedRange)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct EnumReservedRange {
         // message fields
         // @@protoc_insertion_point(field:google.protobuf.EnumDescriptorProto.EnumReservedRange.start)
@@ -2979,8 +3012,8 @@ pub mod enum_descriptor_proto {
 }
 
 ///  Describes a value within an enum.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.EnumValueDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct EnumValueDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.EnumValueDescriptorProto.name)
@@ -3199,8 +3232,8 @@ impl crate::reflect::ProtobufValue for EnumValueDescriptorProto {
 }
 
 ///  Describes a service.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.ServiceDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct ServiceDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.ServiceDescriptorProto.name)
@@ -3406,8 +3439,8 @@ impl crate::reflect::ProtobufValue for ServiceDescriptorProto {
 }
 
 ///  Describes a method of a service.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.MethodDescriptorProto)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct MethodDescriptorProto {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.MethodDescriptorProto.name)
@@ -3774,8 +3807,8 @@ impl crate::reflect::ProtobufValue for MethodDescriptorProto {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.FileOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct FileOptions {
     // message fields
     ///  Sets the Java package where classes generated from this .proto will be
@@ -4908,6 +4941,15 @@ pub mod file_options {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<OptimizeMode> {
+            match str {
+                "SPEED" => ::std::option::Option::Some(OptimizeMode::SPEED),
+                "CODE_SIZE" => ::std::option::Option::Some(OptimizeMode::CODE_SIZE),
+                "LITE_RUNTIME" => ::std::option::Option::Some(OptimizeMode::LITE_RUNTIME),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [OptimizeMode] = &[
             OptimizeMode::SPEED,
             OptimizeMode::CODE_SIZE,
@@ -4945,8 +4987,8 @@ pub mod file_options {
     }
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.MessageOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct MessageOptions {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.MessageOptions.message_set_wire_format)
@@ -5229,8 +5271,8 @@ impl crate::reflect::ProtobufValue for MessageOptions {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.FieldOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct FieldOptions {
     // message fields
     ///  The ctype option instructs the C++ code generator to use a different
@@ -5668,6 +5710,15 @@ pub mod field_options {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<CType> {
+            match str {
+                "STRING" => ::std::option::Option::Some(CType::STRING),
+                "CORD" => ::std::option::Option::Some(CType::CORD),
+                "STRING_PIECE" => ::std::option::Option::Some(CType::STRING_PIECE),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [CType] = &[
             CType::STRING,
             CType::CORD,
@@ -5726,6 +5777,15 @@ pub mod field_options {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<JSType> {
+            match str {
+                "JS_NORMAL" => ::std::option::Option::Some(JSType::JS_NORMAL),
+                "JS_STRING" => ::std::option::Option::Some(JSType::JS_STRING),
+                "JS_NUMBER" => ::std::option::Option::Some(JSType::JS_NUMBER),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [JSType] = &[
             JSType::JS_NORMAL,
             JSType::JS_STRING,
@@ -5758,8 +5818,8 @@ pub mod field_options {
     }
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.OneofOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct OneofOptions {
     // message fields
     ///  The parser stores options it doesn't recognize here. See above.
@@ -5887,8 +5947,8 @@ impl crate::reflect::ProtobufValue for OneofOptions {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.EnumOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct EnumOptions {
     // message fields
     ///  Set this option to true to allow mapping different tag names to the same
@@ -6096,8 +6156,8 @@ impl crate::reflect::ProtobufValue for EnumOptions {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.EnumValueOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct EnumValueOptions {
     // message fields
     ///  Is this enum value deprecated?
@@ -6266,8 +6326,8 @@ impl crate::reflect::ProtobufValue for EnumValueOptions {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.ServiceOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct ServiceOptions {
     // message fields
     ///  Is this service deprecated?
@@ -6436,8 +6496,8 @@ impl crate::reflect::ProtobufValue for ServiceOptions {
     type RuntimeType = crate::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.MethodOptions)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct MethodOptions {
     // message fields
     ///  Is this method deprecated?
@@ -6678,6 +6738,15 @@ pub mod method_options {
             }
         }
 
+        fn from_str(str: &str) -> ::std::option::Option<IdempotencyLevel> {
+            match str {
+                "IDEMPOTENCY_UNKNOWN" => ::std::option::Option::Some(IdempotencyLevel::IDEMPOTENCY_UNKNOWN),
+                "NO_SIDE_EFFECTS" => ::std::option::Option::Some(IdempotencyLevel::NO_SIDE_EFFECTS),
+                "IDEMPOTENT" => ::std::option::Option::Some(IdempotencyLevel::IDEMPOTENT),
+                _ => ::std::option::Option::None
+            }
+        }
+
         const VALUES: &'static [IdempotencyLevel] = &[
             IdempotencyLevel::IDEMPOTENCY_UNKNOWN,
             IdempotencyLevel::NO_SIDE_EFFECTS,
@@ -6716,8 +6785,8 @@ pub mod method_options {
 ///  options protos in descriptor objects (e.g. returned by Descriptor::options(),
 ///  or produced by Descriptor::CopyTo()) will never have UninterpretedOptions
 ///  in them.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.UninterpretedOption)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct UninterpretedOption {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.UninterpretedOption.name)
@@ -7126,8 +7195,8 @@ pub mod uninterpreted_option {
     ///  extension (denoted with parentheses in options specs in .proto files).
     ///  E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents
     ///  "foo.(bar.baz).qux".
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.UninterpretedOption.NamePart)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct NamePart {
         // message fields
         // @@protoc_insertion_point(field:google.protobuf.UninterpretedOption.NamePart.name_part)
@@ -7330,8 +7399,8 @@ pub mod uninterpreted_option {
 
 ///  Encapsulates information about the original source file from which a
 ///  FileDescriptorProto was generated.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.SourceCodeInfo)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct SourceCodeInfo {
     // message fields
     // @@protoc_insertion_point(field:google.protobuf.SourceCodeInfo.location)
@@ -7455,8 +7524,8 @@ impl crate::reflect::ProtobufValue for SourceCodeInfo {
 
 /// Nested message and enums of message `SourceCodeInfo`
 pub mod source_code_info {
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.SourceCodeInfo.Location)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct Location {
         // message fields
         // @@protoc_insertion_point(field:google.protobuf.SourceCodeInfo.Location.path)
@@ -7728,8 +7797,8 @@ pub mod source_code_info {
 ///  Describes the relationship between generated code and its original source
 ///  file. A GeneratedCodeInfo message is associated with only one generated
 ///  source file, but may contain references to different source .proto files.
-#[derive(PartialEq,Clone,Default,Debug)]
 // @@protoc_insertion_point(message:google.protobuf.GeneratedCodeInfo)
+#[derive(PartialEq,Clone,Default,Debug)]
 pub struct GeneratedCodeInfo {
     // message fields
     ///  An Annotation connects some span of text in generated code to an element
@@ -7855,8 +7924,8 @@ impl crate::reflect::ProtobufValue for GeneratedCodeInfo {
 
 /// Nested message and enums of message `GeneratedCodeInfo`
 pub mod generated_code_info {
-    #[derive(PartialEq,Clone,Default,Debug)]
     // @@protoc_insertion_point(message:google.protobuf.GeneratedCodeInfo.Annotation)
+    #[derive(PartialEq,Clone,Default,Debug)]
     pub struct Annotation {
         // message fields
         ///  Identifies the element in the original source .proto file. This field
