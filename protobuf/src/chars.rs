@@ -45,6 +45,11 @@ impl Chars {
     pub fn into_bytes(self) -> Bytes {
         self.0
     }
+
+    /// Self-explanatory
+    pub fn as_str(&self) -> &str {
+        self
+    }
 }
 
 // Chars can be used as the key in a HashMap in a proto map. Because Chars is a wrapper around
@@ -92,9 +97,19 @@ impl Deref for Chars {
     }
 }
 
+impl<T> AsRef<T> for Chars
+where
+    T: ?Sized,
+    <Chars as Deref>::Target: AsRef<T>,
+{
+    fn as_ref(&self) -> &T {
+        self.deref().as_ref()
+    }
+}
+
 impl Borrow<str> for Chars {
     fn borrow(&self) -> &str {
-        &*self
+        self
     }
 }
 
