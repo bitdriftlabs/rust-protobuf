@@ -117,10 +117,6 @@ impl<'a> SingularOrOneofField<'a> {
     }
 }
 
-// Representation of map entry: key type and value type
-#[derive(Clone, Debug)]
-pub struct EntryKeyValue<'a>(FieldElem<'a>, FieldElem<'a>);
-
 #[derive(Clone)]
 pub(crate) struct FieldGen<'a> {
     syntax: Syntax,
@@ -185,11 +181,43 @@ impl<'a> FieldGen<'a> {
             }
             RuntimeFieldType::Repeated(..) => {
                 let elem = field_elem(&field, root_scope, &customize);
-
-                FieldKind::Repeated(RepeatedField {
-                    elem,
-                    packed: field.field.proto().options.get_or_default().packed(),
-                })
+                let primitive = match field.field.proto().type_() {
+                    Type::TYPE_DOUBLE
+                    | Type::TYPE_FLOAT
+                    | Type::TYPE_INT64
+                    | Type::TYPE_UINT64
+                    | Type::TYPE_INT32
+                    | Type::TYPE_FIXED64
+                    | Type::TYPE_FIXED32
+                    | Type::TYPE_BOOL
+                    | Type::TYPE_UINT32
+                    | Type::TYPE_SFIXED32
+                    | Type::TYPE_SFIXED64
+                    | Type::TYPE_SINT32
+                    | Type::TYPE_SINT64
+                    | Type::TYPE_ENUM => true,
+                    Type::TYPE_STRING
+                    | Type::TYPE_GROUP
+                    | Type::TYPE_MESSAGE
+                    | Type::TYPE_BYTES => false,
+                };
+                let packed = field
+                    .field
+                    .proto()
+                    .options
+                    .get_or_default()
+                    .packed
+                    .unwrap_or(match field.message.scope.file_scope.syntax() {
+                        Syntax::Proto2 => false,
+                        // in proto3, repeated primitive types are packed by default
+                        Syntax::Proto3 => primitive,
+                    });
+                if packed && !primitive {
+                    anyhow::bail!(
+                        "[packed = true] can only be specified for repeated primitive fields"
+                    );
+                }
+                FieldKind::Repeated(RepeatedField { elem, packed })
             }
             RuntimeFieldType::Singular(..) => {
                 let elem = field_elem(&field, root_scope, &customize);
@@ -274,6 +302,12 @@ impl<'a> FieldGen<'a> {
     pub(crate) fn full_storage_type(&self, reference: &FileAndMod) -> RustType {
         match self.kind {
             FieldKind::Repeated(ref repeated) => repeated.rust_type(reference),
+            FieldKind::Map(MapField {
+                ref key, ref value, ..
+            }) if self.customize.btreemap == Some(true) => RustType::BTreeMap(
+                Box::new(key.rust_storage_elem_type(reference)),
+                Box::new(value.rust_storage_elem_type(reference)),
+            ),
             FieldKind::Map(MapField {
                 ref key, ref value, ..
             }) => RustType::HashMap(

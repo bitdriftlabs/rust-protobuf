@@ -12,7 +12,7 @@ use crate::reflect::RuntimeType;
 mod empty;
 mod generated;
 
-/// Implemented for `HashMap` with appropriate keys and values
+/// Implemented for `HashMap`, `BTreeMap` with appropriate keys and values
 pub(crate) trait ReflectMap: Debug + Send + Sync + 'static {
     fn reflect_iter(&self) -> ReflectMapIter;
 
@@ -33,8 +33,8 @@ pub(crate) trait ReflectMap: Debug + Send + Sync + 'static {
 
 pub(crate) trait ReflectMapIterTrait<'a> {
     fn next(&mut self) -> Option<(ReflectValueRef<'a>, ReflectValueRef<'a>)>;
-    fn key_type(&self) -> RuntimeType;
-    fn value_type(&self) -> RuntimeType;
+    fn _key_type(&self) -> RuntimeType;
+    fn _value_type(&self) -> RuntimeType;
 }
 
 pub struct ReflectMapIter<'a> {
@@ -248,11 +248,11 @@ pub struct ReflectMapRefIter<'a> {
 
 impl<'a> ReflectMapRefIter<'a> {
     fn _key_type(&self) -> RuntimeType {
-        self.iter.imp.key_type()
+        self.iter.imp._key_type()
     }
 
     fn _value_type(&self) -> RuntimeType {
-        self.iter.imp.value_type()
+        self.iter.imp._value_type()
     }
 }
 

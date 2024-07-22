@@ -244,6 +244,7 @@ impl<'a> CodedOutputStream<'a> {
             }
             OutputTarget::Write(ref mut write, _) => {
                 write.write_all(bytes)?;
+                self.pos_of_buffer_start += bytes.len() as u64;
             }
             OutputTarget::Vec(ref mut vec) => {
                 assert!(self.buffer.pos_within_buf() == 0);
@@ -1010,8 +1011,9 @@ impl<'a> Write for CodedOutputStream<'a> {
 
 impl<'a> Drop for CodedOutputStream<'a> {
     fn drop(&mut self) {
-        // This may panic
-        CodedOutputStream::flush(self).expect("failed to flush");
+        // User must call `flush` to guarantee that the data is written.
+        // Rust should have a lint to enforce `flush` call before drop.
+        let _ignore = CodedOutputStream::flush(self);
     }
 }
 
@@ -1221,5 +1223,17 @@ mod test {
             stream.write_raw_bytes(&[0, 1, 2]).unwrap();
             assert_eq!((i + 1) * 3, stream.total_bytes_written());
         }
+    }
+
+    #[test]
+    #[cfg_attr(miri, ignore)] // Miri is too slow for this test.
+    fn total_bytes_written_updated_when_writing_lots_of_bytes() {
+        let data = "ff".repeat(10000);
+        let bytes = decode_hex(&data);
+        test_write(&data, |os| {
+            os.write_raw_bytes(&bytes)?;
+            assert_eq!(os.total_bytes_written(), 10000);
+            Ok(())
+        });
     }
 }

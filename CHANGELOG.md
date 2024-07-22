@@ -1,8 +1,20 @@
 # Changelog
 
-## [3.3] - Unreleased
+## [3.5] - Unreleased
+
+- [Default to packed for repeated primitives in proto3](https://github.com/stepancheg/rust-protobuf/pull/707)
+- [Put correct flag in comment of generated files](https://github.com/stepancheg/rust-protobuf/pull/655)
+- [Option to disable non-exhausive annotation for oneof](https://github.com/stepancheg/rust-protobuf/pull/726)
+- [Option to generate `BTreeMap` for map fields](https://github.com/stepancheg/rust-protobuf/pull/700)
+- [Fix writing large messages](https://github.com/stepancheg/rust-protobuf/pull/725)
+
+## [3.4] - 2024-02-24
 
 * [Unnecessary copy in print_to_string_internal](https://github.com/stepancheg/rust-protobuf/pull/684)
+* [Ignore error of `flush` in `Drop` of `CodedOutputStream`](https://github.com/stepancheg/rust-protobuf/issues/714)
+* [Faster `encoded_varint64_len`](https://github.com/stepancheg/rust-protobuf/pull/709)
+* [`reserved` keyword in enums](https://github.com/stepancheg/rust-protobuf/pull/712)
+* [Set streaming options in pure parser](https://github.com/stepancheg/rust-protobuf/pull/646)
 
 ## [3.3.0] - 2023-09-30
 
