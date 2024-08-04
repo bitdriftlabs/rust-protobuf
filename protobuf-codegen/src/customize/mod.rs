@@ -113,6 +113,8 @@ pub struct Customize {
     pub(crate) inside_protobuf: Option<bool>,
     /// When true, protobuf maps are represented with `std::collections::BTreeMap`
     pub(crate) btreemap: Option<bool>,
+    /// Optional file header to insert at the top of every file.
+    pub(crate) file_header: Option<String>,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -154,6 +156,11 @@ impl Customize {
 
     pub fn oneofs_non_exhaustive(mut self, non_exhaustive: bool) -> Self {
         self.oneofs_non_exhaustive = Some(non_exhaustive);
+        self
+    }
+
+    pub fn file_header(mut self, file_header: String) -> Self {
+        self.file_header = Some(file_header);
         self
     }
 
@@ -219,6 +226,9 @@ impl Customize {
         }
         if let Some(v) = that.oneofs_non_exhaustive {
             self.oneofs_non_exhaustive = Some(v);
+        }
+        if let Some(v) = &that.file_header {
+            self.file_header = Some(v.clone());
         }
     }
 

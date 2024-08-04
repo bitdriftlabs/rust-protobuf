@@ -28,6 +28,7 @@ pub(crate) fn customize_from_rustproto_for_message(source: &MessageOptions) -> C
         gen_mod_rs,
         inside_protobuf,
         btreemap,
+        file_header: None,
     }
 }
 
@@ -57,6 +58,7 @@ pub(crate) fn customize_from_rustproto_for_field(source: &FieldOptions) -> Custo
         gen_mod_rs,
         inside_protobuf,
         btreemap,
+        file_header: None,
     }
 }
 
@@ -82,5 +84,6 @@ pub(crate) fn customize_from_rustproto_for_file(source: &FileOptions) -> Customi
         inside_protobuf,
         gen_mod_rs,
         btreemap,
+        file_header: None,
     }
 }
