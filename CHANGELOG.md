@@ -1,8 +1,23 @@
 # Changelog
 
-## [3.6] - Unreleased
+## Unreleased
 
-## [3.5.1] - Unreleased
+## [3.7.2] - 2025-03-10 (to be released)
+
+- [Do not stack overflow on groups](https://github.com/stepancheg/rust-protobuf/pull/756)
+
+## [3.7.1] - 2024-11-15
+
+- `protoc-gen-rust` renamed to `protoc-gen-rs`. `protoc --rust_out=` no longer works with latest Google protobuf,
+  they are working on official protobuf support for Rust.
+- Do not detect nightly in `protobuf` crate (no longer needed)
+- [Repeated fields in constants](https://github.com/stepancheg/rust-protobuf/pull/740)
+
+## [3.6.0] - 2024-09-30
+
+- [Fix text format parsing of non-ASCII](https://github.com/stepancheg/rust-protobuf/pull/730)
+
+## [3.5.1] - 2024-08-19
 
 - [Remove deprecated `box_pointers` lint](https://github.com/stepancheg/rust-protobuf/pull/733)
 
