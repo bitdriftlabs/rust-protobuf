@@ -513,7 +513,7 @@ impl Printer {
                     }
                     Some(v) => {
                         if let ReflectValueRef::Message(ref message) = v {
-                            if self.should_omit_message_field(&message)? {
+                            if self.should_omit_message_field(&message) {
                                 continue;
                             }
                         }
@@ -543,17 +543,18 @@ impl Printer {
         Ok(())
     }
 
-    fn should_omit_message_field(&self, message: &MessageRef) -> PrintResult<bool> {
+    fn should_omit_message_field(&self, message: &MessageRef) -> bool {
         if !self.print_options.omit_empty_message_fields {
-            return Ok(false);
+            return false;
         }
 
-        let mut nested_printer = Printer {
-            buf: String::new(),
-            print_options: self.print_options.clone(),
+        let Some(value) = message.downcast_ref::<Value>() else {
+            return false;
         };
-        nested_printer.print_message(message)?;
-        Ok(matches!(nested_printer.buf.as_str(), "{}" | "[]"))
+        matches!(
+            value.kind,
+            Some(value::Kind::ListValue(ref list)) if list.values.is_empty()
+        )
     }
 
     fn print_wk_null_value(&mut self, _null_value: &NullValue) -> PrintResult<()> {
@@ -590,7 +591,7 @@ pub struct PrintOptions {
     pub proto_field_name: bool,
     /// Output field default values.
     pub always_output_default_values: bool,
-    /// Omit present singular message fields when their JSON form is empty (`{}` or `[]`).
+    /// Omit present singular `google.protobuf.Value` fields set to an empty `ListValue` (`[]`).
     pub omit_empty_message_fields: bool,
     /// Prevent initializing `PrintOptions` enumerating all field.
     pub _future_options: (),
@@ -623,6 +624,7 @@ mod tests {
     use protobuf::reflect::ReflectValueBox;
     use protobuf::well_known_types::struct_::value::Kind;
     use protobuf::well_known_types::struct_::ListValue;
+    use protobuf::well_known_types::struct_::Struct;
     use protobuf::well_known_types::struct_::Value;
 
     use super::print_to_string_with_options;
@@ -694,5 +696,63 @@ mod tests {
         )
         .unwrap();
         assert_eq!("{}", printed_with_omit);
+    }
+
+    #[test]
+    fn omit_empty_message_fields_keeps_explicit_empty_object() {
+        let proto = r#"
+            syntax = "proto3";
+            package test;
+            import "google/protobuf/struct.proto";
+
+            message Container {
+              google.protobuf.Value value = 1;
+            }
+        "#;
+        let temp_dir = tempfile::tempdir().unwrap();
+        let temp_proto = temp_dir.path().join("container.proto");
+        fs::write(&temp_proto, proto).unwrap();
+
+        let mut file_descriptor_protos = protobuf_parse::Parser::new()
+            .pure()
+            .includes(&[
+                temp_dir.path().to_path_buf(),
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../google-protobuf-all-protos/protobuf/protobuf-git/src"),
+            ])
+            .input(&temp_proto)
+            .parse_and_typecheck()
+            .unwrap()
+            .file_descriptors;
+        let file_descriptor_proto: FileDescriptorProto = file_descriptor_protos.pop().unwrap();
+        let file_descriptor = FileDescriptor::new_dynamic(
+            file_descriptor_proto,
+            &[protobuf::well_known_types::struct_::file_descriptor().clone()],
+        )
+        .unwrap();
+
+        let container_descriptor = file_descriptor
+            .message_by_package_relative_name("Container")
+            .unwrap();
+        let mut container = container_descriptor.new_instance();
+        let value_field = container_descriptor.field_by_name("value").unwrap();
+        let value_message = Value {
+            kind: Some(Kind::StructValue(Struct::default())),
+            ..Default::default()
+        };
+        value_field.set_singular_field(
+            &mut *container,
+            ReflectValueBox::Message(Box::new(value_message)),
+        );
+
+        let printed_with_omit = print_to_string_with_options(
+            &*container,
+            &PrintOptions {
+                omit_empty_message_fields: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(r#"{"value": {}}"#, printed_with_omit);
     }
 }
