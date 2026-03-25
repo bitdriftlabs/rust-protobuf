@@ -1,7 +1,8 @@
 //! Utilities to support "extension" fields.
 //!
-//! This is a stopgap implementation, it only allows to fetch basic singular values,
-//! and that's it. Anything similar to extension registry is not implemented yet.
+//! This is a stopgap implementation that supports fetching singular and repeated scalar,
+//! string, bytes, and message extension values. Anything similar to an extension registry
+//! is not implemented yet.
 //!
 //! Extensions are [described in the official protobuf documentation][exts].
 //!
@@ -13,6 +14,10 @@ use crate::descriptor::field_descriptor_proto::Type;
 use crate::reflect::runtime_types::RuntimeTypeTrait;
 use crate::reflect::ProtobufValue;
 use crate::Message;
+
+#[cfg(test)]
+#[path = "./ext_test.rs"]
+mod tests;
 
 /// Optional ext field
 ///
@@ -31,10 +36,8 @@ pub struct ExtFieldOptional<M, T> {
 /// This is initialized from generated code, do not instantiate directly.
 pub struct ExtFieldRepeated<M, V> {
     /// Extension field number
-    #[allow(dead_code)]
     field_number: u32,
     /// Field type.
-    #[allow(dead_code)]
     field_type: Type,
     /// Extension field number
     phantom: PhantomData<(M, V)>,
@@ -74,8 +77,15 @@ impl<M, V> ExtFieldRepeated<M, V> {
 }
 
 impl<M: Message, V: ProtobufValue> ExtFieldRepeated<M, V> {
-    /// Get a copy of value from a message (**not implemented**).
-    pub fn get(&self, _m: &M) -> Vec<V> {
-        unimplemented!("extension fields implementation in rust-protobuf is stopgap")
+    /// Get all values of this repeated extension field from a message.
+    ///
+    /// Extension data is stored in [`UnknownFields`](crate::UnknownFields). Both non-packed
+    /// (proto2 default) and packed (proto3 default for scalars) encodings are handled.
+    pub fn get(&self, m: &M) -> Vec<V> {
+        let mut result = Vec::new();
+        for uv in m.unknown_fields().get_all(self.field_number) {
+            V::RuntimeType::decode_repeated_from_unknown(uv, self.field_type, &mut result);
+        }
+        result
     }
 }
