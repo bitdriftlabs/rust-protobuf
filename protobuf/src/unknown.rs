@@ -337,6 +337,19 @@ impl UnknownFields {
         }
     }
 
+    /// Iterate over all values for a specific field number.
+    ///
+    /// Unlike [`get`](Self::get) which returns only one value, this yields every stored
+    /// occurrence — needed for repeated extension fields where all wire values must be
+    /// collected.
+    pub(crate) fn get_all(&self, field_number: u32) -> impl Iterator<Item = UnknownValueRef<'_>> {
+        self.fields
+            .as_ref()
+            .and_then(|m| m.get(&field_number))
+            .into_iter()
+            .flat_map(|v| v.iter())
+    }
+
     #[doc(hidden)]
     pub fn write_to_bytes(&self) -> Vec<u8> {
         let mut r = Vec::with_capacity(rt::unknown_fields_size(self) as usize);

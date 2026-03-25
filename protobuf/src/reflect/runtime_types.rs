@@ -10,6 +10,7 @@ use bytes::Bytes;
 
 #[cfg(feature = "bytes")]
 use crate::chars::Chars;
+use crate::coded_input_stream::CodedInputStream;
 use crate::descriptor::field_descriptor_proto::Type;
 use crate::enum_or_unknown::EnumOrUnknown;
 use crate::message_full::MessageFull;
@@ -43,6 +44,46 @@ use crate::reflect::ReflectValueBox;
 use crate::reflect::ReflectValueRef;
 use crate::EnumFull;
 use crate::UnknownValueRef;
+
+/// Decode a packed scalar field from raw bytes into `out`, using the runtime type `R` to
+/// interpret each element. This handles proto3's packed encoding, where all repetitions of a
+/// scalar field are stored as a single length-delimited unknown with elements concatenated.
+fn decode_packed_into<R: RuntimeTypeTrait>(
+    bytes: &[u8],
+    field_type: Type,
+    out: &mut Vec<R::Value>,
+) {
+    let mut stream = CodedInputStream::from_bytes(bytes);
+    loop {
+        match stream.eof() {
+            Ok(true) | Err(_) => break,
+            Ok(false) => {}
+        }
+        // Read the next raw wire value according to the field's encoding. Fixed-width types use
+        // 4 or 8 bytes; everything else (int32, uint64, bool, enum, sint*, …) uses varint.
+        let uv = match field_type {
+            Type::TYPE_FLOAT | Type::TYPE_FIXED32 | Type::TYPE_SFIXED32 => {
+                match stream.read_raw_little_endian32() {
+                    Ok(v) => UnknownValueRef::Fixed32(v),
+                    Err(_) => break,
+                }
+            }
+            Type::TYPE_DOUBLE | Type::TYPE_FIXED64 | Type::TYPE_SFIXED64 => {
+                match stream.read_raw_little_endian64() {
+                    Ok(v) => UnknownValueRef::Fixed64(v),
+                    Err(_) => break,
+                }
+            }
+            _ => match stream.read_raw_varint64() {
+                Ok(v) => UnknownValueRef::Varint(v),
+                Err(_) => break,
+            },
+        };
+        if let Some(v) = R::get_from_unknown(uv, field_type) {
+            out.push(v);
+        }
+    }
+}
 
 /// `RuntimeType` is not implemented by all protobuf types directly
 /// because it's not possible to implement `RuntimeType` for all `Message`
@@ -107,6 +148,33 @@ pub trait RuntimeTypeTrait: fmt::Debug + Send + Sync + Sized + 'static {
 
     /// Parse the value from unknown fields.
     fn get_from_unknown(unknown: UnknownValueRef, field_type: Type) -> Option<Self::Value>;
+
+    /// Decode all occurrences of a repeated field from a single unknown value, appending to
+    /// `out`. This handles both non-packed encoding (one value per wire entry, the proto2
+    /// default) and packed encoding (a single length-delimited entry holding all elements,
+    /// the proto3 default for scalar types).
+    ///
+    /// For length-delimited types (string, bytes, message) the direct `get_from_unknown` path
+    /// succeeds and the packed path is never tried.
+    fn decode_repeated_from_unknown(
+        unknown: UnknownValueRef,
+        field_type: Type,
+        out: &mut Vec<Self::Value>,
+    ) {
+        if let UnknownValueRef::LengthDelimited(bytes) = unknown {
+            // Try direct decode first — covers string, bytes, and message.
+            if let Some(v) =
+                Self::get_from_unknown(UnknownValueRef::LengthDelimited(bytes), field_type)
+            {
+                out.push(v);
+                return;
+            }
+            // Fallback: treat as a packed scalar field (proto3 default for repeated scalars).
+            decode_packed_into::<Self>(bytes, field_type, out);
+        } else if let Some(v) = Self::get_from_unknown(unknown, field_type) {
+            out.push(v);
+        }
+    }
 }
 
 /// Runtime type which can be dereferenced.
