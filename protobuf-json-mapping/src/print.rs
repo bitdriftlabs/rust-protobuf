@@ -1,8 +1,10 @@
 use std::fmt;
 use std::fmt::Write as fmt_Write;
+use std::sync::Arc;
 
 use protobuf::reflect::EnumDescriptor;
 use protobuf::reflect::EnumValueDescriptor;
+use protobuf::reflect::FieldDescriptor;
 use protobuf::reflect::MessageRef;
 use protobuf::reflect::ReflectFieldRef;
 use protobuf::reflect::ReflectMapRef;
@@ -481,6 +483,13 @@ impl Printer {
         write!(self.buf, "{{")?;
         let mut first = true;
         for field in descriptor.fields() {
+            // When a field filter is set, skip fields that the caller wants excluded.
+            if let Some(ref filter) = self.print_options.field_filter {
+                if !filter(&field) {
+                    continue;
+                }
+            }
+
             let json_field_name = if self.print_options.proto_field_name {
                 field.name()
             } else {
@@ -560,7 +569,6 @@ impl Printer {
 ///     ..Default::default()
 /// };
 /// ```
-#[derive(Default, Debug, Clone)]
 pub struct PrintOptions {
     /// Use ints instead of strings for enums.
     ///
@@ -571,8 +579,51 @@ pub struct PrintOptions {
     pub proto_field_name: bool,
     /// Output field default values.
     pub always_output_default_values: bool,
+    /// Optional per-field filter applied during serialization. When set, only
+    /// fields for which the callback returns `true` are included in the JSON
+    /// output. The filter is consulted recursively for nested messages.
+    pub field_filter: Option<Arc<dyn Fn(&FieldDescriptor) -> bool + Send + Sync>>,
     /// Prevent initializing `PrintOptions` enumerating all field.
     pub _future_options: (),
+}
+
+impl Default for PrintOptions {
+    fn default() -> Self {
+        Self {
+            enum_values_int: false,
+            proto_field_name: false,
+            always_output_default_values: false,
+            field_filter: None,
+            _future_options: (),
+        }
+    }
+}
+
+impl Clone for PrintOptions {
+    fn clone(&self) -> Self {
+        Self {
+            enum_values_int: self.enum_values_int,
+            proto_field_name: self.proto_field_name,
+            always_output_default_values: self.always_output_default_values,
+            field_filter: self.field_filter.clone(),
+            _future_options: (),
+        }
+    }
+}
+
+impl fmt::Debug for PrintOptions {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PrintOptions")
+            .field("enum_values_int", &self.enum_values_int)
+            .field("proto_field_name", &self.proto_field_name)
+            .field(
+                "always_output_default_values",
+                &self.always_output_default_values,
+            )
+            .field("field_filter", &self.field_filter.is_some())
+            .field("_future_options", &self._future_options)
+            .finish()
+    }
 }
 
 /// Serialize message to JSON according to protobuf specification.

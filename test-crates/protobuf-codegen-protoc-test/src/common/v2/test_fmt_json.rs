@@ -362,3 +362,40 @@ fn test_more_than_one() {
         &m,
     );
 }
+
+#[test]
+fn test_field_filter_excludes_non_matching_fields() {
+    let mut m = TestTypes::new();
+    m.set_bool_singular(true);
+    m.set_string_singular("hello".to_owned());
+    m.set_int32_singular(42);
+
+    // Only include the bool and string fields via filter.
+    let print_options = protobuf_json_mapping::PrintOptions {
+        field_filter: Some(std::sync::Arc::new(|field| {
+            field.name() == "bool_singular" || field.name() == "string_singular"
+        })),
+        ..Default::default()
+    };
+    let json = protobuf_json_mapping::print_to_string_with_options(&m, &print_options).unwrap();
+    assert_eq!(
+        "{\"boolSingular\": true, \"stringSingular\": \"hello\"}",
+        json
+    );
+}
+
+#[test]
+fn test_field_filter_with_always_output_defaults() {
+    let m = TestIncludeDefaultValues::new();
+
+    // With field_filter + always_output_default_values, the filter controls which
+    // default-valued fields are emitted. iii is a plain optional int32 so its
+    // default (0) should appear when both flags are set.
+    let print_options = protobuf_json_mapping::PrintOptions {
+        always_output_default_values: true,
+        field_filter: Some(std::sync::Arc::new(|field| field.name() == "iii")),
+        ..Default::default()
+    };
+    let json = protobuf_json_mapping::print_to_string_with_options(&m, &print_options).unwrap();
+    assert_eq!("{\"iii\": 0}", json);
+}
