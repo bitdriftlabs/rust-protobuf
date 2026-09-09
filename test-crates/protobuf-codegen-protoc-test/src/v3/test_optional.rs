@@ -1,6 +1,9 @@
 use protobuf::reflect::ReflectValueRef;
-use protobuf::MessageFull;
-use protobuf_test_common::test_serialize_deserialize_with_dynamic;
+use protobuf::{MessageDyn, MessageFull};
+use protobuf_test_common::{
+    dynamic_descriptor_for_descriptor, test_serialize_deserialize_no_hex_with_dynamic,
+    test_serialize_deserialize_with_dynamic,
+};
 
 use super::test_optional_pb::*;
 
@@ -9,6 +12,39 @@ fn serialize_deserialize() {
     let mut message = TestOptionalProto3::new();
     message.iii = Some(0x1a);
     test_serialize_deserialize_with_dynamic("f8 01 1a", &message);
+}
+
+#[test]
+fn dynamic_serialization_preserves_selected_default_values() {
+    let mut message = TestOptionalProto3::new();
+    let descriptor = TestOptionalProto3::descriptor();
+
+    descriptor
+        .field_by_name("one_field_2")
+        .unwrap()
+        .set_singular_field(&mut message, 0i32.into());
+    descriptor
+        .field_by_name("iii")
+        .unwrap()
+        .set_singular_field(&mut message, 0i32.into());
+    descriptor
+        .field_by_name("sss")
+        .unwrap()
+        .set_singular_field(&mut message, String::new().into());
+
+    test_serialize_deserialize_no_hex_with_dynamic(&message);
+}
+
+#[test]
+fn dynamic_serialization_elides_implicit_default_values() {
+    let descriptor = dynamic_descriptor_for_descriptor::<TestOptionalProto3>();
+    let mut message = descriptor.new_instance();
+    descriptor
+        .field_by_name("non_optional")
+        .unwrap()
+        .set_singular_field(&mut *message, 0i32.into());
+
+    assert!(message.write_to_bytes_dyn().unwrap().is_empty());
 }
 
 #[test]
